@@ -1,0 +1,28 @@
+[general]
+import = [
+    "~/.config/alacritty/fonts/FiraCode.toml",
+    "~/.config/alacritty/themes/tokyonight/moon.toml"
+]
+
+[window]
+padding = { x = 5, y = 5 }
+dynamic_padding = true
+decorations = "full"
+opacity = 0.9
+startup_mode = "Maximized"
+
+[cursor.style]
+shape = "Block"
+blinking = "On"
+
+[selection]
+save_to_clipboard = false
+
+[terminal.shell]
+program = "/usr/bin/zsh"
+
+[keyboard]
+bindings = [
+{ key = "Insert", mods = "Shift", action = "Paste" },
+{ key = "Insert", mods = "Control", action = "Copy" }
+]

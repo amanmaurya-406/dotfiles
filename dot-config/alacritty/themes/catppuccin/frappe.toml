@@ -1,0 +1,58 @@
+[colors.primary]
+background = "#303446" # Base
+foreground = "#c6d0f5" # Text
+
+[colors.cursor]
+text = "#303446"
+cursor = "#c6d0f5"
+
+[colors.search.matches]
+foreground = "#303446"
+background = "#e5c890" # Yellow
+
+[colors.search.focused_match]
+foreground = "#303446"
+background = "#a6d189" # Green
+
+[colors.hints.start]
+foreground = "#303446"
+background = "#e5c890" # Yellow
+
+[colors.hints.end]
+foreground = "#303446"
+background = "#51576d" # Surface 1
+
+[colors.line_indicator]
+foreground = "None"
+background = "None"
+
+[colors.footer_bar]
+foreground = "#c6d0f5"
+background = "#292c3c" # Mantle
+
+[colors.selection]
+text = "#c6d0f5"
+background = "#414559" # Surface 0
+
+[colors.normal]
+black   = "#51576d" # Surface 1
+red     = "#e78284" # Red
+green   = "#a6d189" # Green
+yellow  = "#e5c890" # Yellow
+blue    = "#8caaee" # Blue
+magenta = "#ca9ee6" # Mauve
+cyan    = "#81c8be" # Teal
+white   = "#b5bfe2" # Subtext 1
+
+[colors.bright]
+black   = "#737994" # Overlay 0
+red     = "#ea999c" # Maroon
+green   = "#a6d189" # Green
+yellow  = "#ef9f76" # Peach
+blue    = "#babbf1" # Lavender
+magenta = "#f4b8e4" # Pink
+cyan    = "#99d1db" # Sky
+white   = "#c6d0f5" # Text
+
+[colors]
+draw_bold_text_with_bright_colors = true

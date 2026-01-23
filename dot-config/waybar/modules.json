@@ -1,0 +1,71 @@
+{
+    "custom/launcher": {
+        "format": "",
+        "on-click": "rofi -show filebrowser -replace",
+        "tooltip": false
+    },
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "focused": "",
+            "default": "",
+            "urgent": ""
+        },
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+        }
+    },
+
+    "custom/swap": {
+        "on-click": "~/.config/waybar/scripts/swap.sh",
+        "format": "  ",
+        "tooltip": true,
+        "tooltip-format": "Swap between waybar Themes"
+    },
+ 
+    "clock": {
+        "format": "󰥔 {:%I:%M %p}",
+        "format-alt": "󰥔 {:%d %b, %a  %I:%M %p}"
+    },
+
+    "cpu": {
+        "format": " {usage: >3}%",
+        "on-click": "alacritty -e htop"
+    },
+
+    "network": {
+        "format": "⚠ Disabled",
+        "format-wifi": " {essid}",
+        "format-ethernet": " Wired",
+        "format-disconnected": "⚠ Disconnected",
+        "tooltip-format": " {ifname} via {gwaddri}",
+        "tooltip-format-wifi": " {essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": " {ifname} ({ipaddr}/{cidr})",
+        "tooltip-format-disconnected": "⚠ Disconnected",
+        "on-click": "nm-connection-editor"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity: >3}%",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": " {capacity}%",
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "~/.config/rofi/powermenu/powermenu.sh",
+        "tooltip": false
+    },
+}

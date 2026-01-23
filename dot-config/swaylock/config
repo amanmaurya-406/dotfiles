@@ -1,0 +1,35 @@
+daemonize
+hide-keyboard-layout
+ignore-empty-password
+
+# Background
+image=~/Pictures/Wallpapers/mojave-night-lightened-r.jpg
+scaling=fill
+effect-blur=7x5
+
+# Colors
+color=1e1e2e
+ring-color=cba6f7
+inside-color=1e1e2e
+text-color=cdd6f4
+line-color=00000000
+separator-color=00000000
+
+# Input Field
+indicator
+indicator-radius=100
+indicator-thickness=7
+
+key-hi-color=cba6f7
+bs-hi-color=f38ba8
+caps-lock-key-hi-color=1e1e2e
+
+inside-ver-color=1e1e2e
+ring-ver-color=f38ba8
+inside-wrong-color=1e1e2e
+ring-wrong-color=f38ba8
+
+# Text
+timestr=%H:%M
+datestr=%A, %d %B %Y
+font=JetBrainsMono Nerd Font
