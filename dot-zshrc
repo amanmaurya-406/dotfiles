@@ -6,6 +6,37 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 
+
+#######################################################
+# Environment Variables
+#######################################################
+
+export TERM="xterm-256color"
+export MANPAGER='nvim +Man!'
+export FZF_DEFAULT_OPTS="--layout=reverse --height=50% --exact --border=bold --border=rounded"
+
+### Setting other Environment Variables
+if [ -z "$XDG_CONFIG_HOME" ] ; then
+    export XDG_CONFIG_HOME="$HOME/.config"
+fi
+if [ -z "$XDG_DATA_HOME" ] ; then
+    export XDG_DATA_HOME="$HOME/.local/share"
+fi
+if [ -z "$XDG_CACHE_HOME" ] ; then
+    export XDG_CACHE_HOME="$HOME/.cache"
+fi
+
+
+
+#######################################################
+# Shell Parameters
+#######################################################
+
+# A list of non-alphanumeric characters considered part of a word by the line editor.
+WORDCHARS=${WORDCHARS//[\/.-]}
+
+
+
 #######################################################
 # ZSH Plugin Manager
 #######################################################
@@ -23,13 +54,17 @@ fi
 source "${ZINIT_HOME}/zinit.zsh"
 
 
+
 #######################################################
 # Powerlevel10k instant prompt
 #######################################################
-zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+zinit ice depth=1;
+zinit light romkatv/powerlevel10k
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 
 
 #######################################################
@@ -41,7 +76,7 @@ zinit light zsh-users/zsh-completions
 
 # Load completions
 autoload -Uz compinit
-compinit -d $HOME/.cache/zcompdump
+compinit -d $XDG_CACHE_HOME/zcompdump
 zinit cdreplay -q
 
 zinit light zsh-users/zsh-autosuggestions
@@ -50,51 +85,56 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 zinit light Aloxaf/fzf-tab
 
 
+
 #######################################################
-# Add in snippets
+# Source additional local .zsh files
 #######################################################
-for file in $HOME/.config/zsh/*.zsh; do
-  zinit snippet "$file"
+
+for file in $XDG_CONFIG_HOME/zsh/*.zsh; do
+  source "$file"
 done
 
 # enable command-not-found if installed
 if [ -f /etc/zsh_command_not_found ]; then
-    zinit snippet /etc/zsh_command_not_found
+    source /etc/zsh_command_not_found
 fi
+
 
 
 #######################################################
 # History Configuration
 #######################################################
 
-HISTSIZE=10000
-SAVEHIST=$HISTSIZE
 HISTFILE=$HOME/.zsh_history
-HISTDUP=erase                 # erases any duplicates inside history file
-setopt appendhistory          # appends commands rather than overwritting them
-setopt share_history          # share command history over all the zsh sessions at the same time
-setopt hist_ignore_space      # ignore commands that start with space
-setopt hist_save_no_dups      # don't save duplicate commands
-setopt hist_ignore_dups       # ignore duplicated commands history list
-setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
-setopt hist_verify            # show command with history expansion to user before running it
-setopt hist_find_no_dups      # prevents any duplicates from being shown to us inside historical search
+HISTORY_IGNORE='(ls*|cd*|pwd|exit|history*|cd -*|sudo reboot)'
+HISTSIZE=10000
+SAVEHIST=8000
+
+setopt APPEND_HISTORY         # appends commands rather than overwritting them
+setopt HIST_EXPIRE_DUPS_FIRST # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt HIST_FIND_NO_DUPS      # prevents any duplicates from being shown to us inside historical search
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS       # ignore duplicated commands history list
+setopt HIST_IGNORE_SPACE      # ignore commands that start with space
+setopt HIST_SAVE_NO_DUPS      # don't save duplicate commands
+setopt HIST_VERIFY            # show command with history expansion to user before running it
+setopt SHARE_HISTORY          # share command history over all the zsh sessions at the same time
+
 
 
 #######################################################
 # ZSH Basic Options
 #######################################################
 
-setopt autocd              # change directory just by typing its name
-#setopt correct            # auto correct mistakes
-setopt interactivecomments # allow comments in interactive mode
-setopt magicequalsubst     # enable filename expansion for arguments of the form ‘anything=expression’
-setopt nonomatch           # hide error message if there is no match for the pattern
-setopt notify              # report the status of background jobs immediately
-setopt numericglobsort     # sort filenames numerically when it makes sense
-setopt promptsubst         # enable command substitution in prompt
+#setopt CORRECT                # auto correct mistakes
+setopt AUTO_CD                # change directory just by typing its name
+setopt INTERACTIVE_COMMENTS   # allow comments in interactive shell
+setopt MAGIC_EQUAL_SUBST      # enable filename expansion for arguments of the form ‘anything=expression’
+setopt NO_NOMATCH             # hide error message if there is no match for the pattern
+setopt NOTIFY                 # report the status of background jobs immediately
+setopt NUMERIC_GLOB_SORT      # sort filenames numerically when it makes sense
+setopt PROMPT_SUBST           # enable command substitution in prompt
 
-WORDCHARS=${WORDCHARS//\/} # Don't consider certain characters part of the word
 
 
 #######################################################
@@ -114,19 +154,54 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 
-#######################################################
-# Environment Variables
-#######################################################
-
-# all man commands open inside Neovim instead of the terminal pager
-export MANPAGER='nvim +Man!'
-
-# inputbar below the command prompt instead of bottom
-export FZF_DEFAULT_OPTS="--layout=reverse --height=50% --border"
-
 
 #######################################################
 # Shell integrations
 #######################################################
 
 eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
+
+
+
+#######################################################
+# Archive Extraction
+#######################################################
+
+# Usage: ex <file1 ... >
+function ex {
+if [ -z "$1" ]; then
+    # display usage if no parameters given
+    echo "Usage: ex <path/file_name_1.ext> [path/file_name_2.ext] [path/file_name_3.ext]"
+  else
+    for n in "$@"
+    do
+      if [ -f "$n" ] ; then
+        case "${n%,}" in
+          *.tar.bz2) tar xjf "$1"           ;;
+          *.tar.gz)  tar xzf "$1"           ;;
+          *.bz2)     bunzip2 "$1"           ;;
+          *.rar)     unrar x "$1"           ;;
+          *.gz)      gunzip "$1"            ;;
+          *.tar)     tar xf "$1"            ;;
+          *.tbz2)    tar xjf "$1"           ;;
+          *.tgz)     tar xzf "$1"           ;;
+          *.zip)     unzip "$1"             ;;
+          *.Z)       uncompress "$1"        ;;
+          *.7z)      7z x "$1"              ;;
+          *.deb)     ar x "$1"              ;;
+          *.tar.xz)  tar xf "$1"            ;;
+          *.tar.zst) tar -I zstd -xf "$1"   ;;
+          *) 
+            echo "ex: '$n' - unknown archive method"
+            return 1
+            ;;
+        esac
+      else
+        echo "'$n' - file does not exist"
+        return 1
+      fi
+    done
+fi
+}
+
