@@ -1,6 +1,6 @@
 #######################################################
 # Aliases
-####################################################### 
+#######################################################
 
 # force zsh to show the complete history
 alias history='builtin history 0'
@@ -10,14 +10,13 @@ alias h='builtin history 0'
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-    alias diff='diff --color=auto'
-    alias ip='ip --color=auto'
+    alias dir='dir --color=always'
+    alias vdir='vdir --color=always'
+    alias grep='grep --color=always'
+    alias fgrep='fgrep --color=always'
+    alias egrep='egrep --color=always'
+    alias diff='diff --color=always'
+    alias ip='ip -color=always'
 fi
 
 # Alias for neovim
@@ -34,16 +33,17 @@ fi
 
 # Alias for lsd
 if [[ -x "$(command -v lsd)" ]]; then
-    alias ls='lsd -F --color=auto --group-directories-first'
-    alias l='ls -l --blocks permission,user,group,size,name'
-    alias ll='ls -l'
-    alias la='ls -A'
-    alias lla='ls -lA --blocks permission,user,group,size,name'
-    alias tree='ls --tree'
+    alias ls='lsd -F --color=always --icon=always --group-directories-first'
+    alias l='lsd -l --color=always --icon=always --group-directories-first --blocks permission,user,group,size,name'
+    alias l.='lsd -lA --color=always --icon=always --group-directories-first | grep " \."'
+    alias ll='lsd -l --color=always --icon=always --group-directories-first'
+    alias la='lsd -A --color=always --icon=always --group-directories-first'
+    alias lla='lsd -lA --color=always --icon=always --group-directories-first --blocks permission,user,group,size,name'
+    alias tree='lsd --tree --color=always --icon=always --group-directories-first'
 fi
 
 # Some other usefull aliases
 alias c='clear'
-alias q='exit'
+alias x='exit'
 alias fd='fdfind'
 alias stow='command stow --dotfiles'
