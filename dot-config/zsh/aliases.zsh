@@ -42,8 +42,25 @@ if [[ -x "$(command -v lsd)" ]]; then
     alias tree='lsd --tree --color=always --icon=always --group-directories-first'
 fi
 
+# Alias for git
+alias gst='git status'
+alias gad='git add -u'
+alias gaa='git add .'
+alias gcm='git commit -m'
+alias gps='git push origin'
+alias gdf='git diff'
+alias glg='git log'
+alias gbr='git branch'
+alias gco='git checkout'
+alias gcl='git clone'
+alias gft='git fetch'
+alias gpl='git pull origin'
+alias gtg='git tag'
+alias gnt='git tag -a'
+
 # Some other usefull aliases
 alias c='clear'
 alias x='exit'
 alias fd='fdfind'
 alias stow='command stow --dotfiles'
+alias gdb='gdb -q'
