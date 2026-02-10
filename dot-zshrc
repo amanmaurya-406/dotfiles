@@ -36,6 +36,14 @@ fi
 WORDCHARS=${WORDCHARS//[\/.-]}
 
 
+#######################################################
+# Time Format
+#######################################################
+
+TIMEFMT=$'\033[36mUser:\033[0m    %U
+\033[36mSystem:\033[0m  %S
+\033[36mTotal:\033[0m   %E'
+
 
 #######################################################
 # ZSH Plugin Manager
@@ -106,7 +114,7 @@ fi
 #######################################################
 
 HISTFILE=$HOME/.zsh_history
-HISTORY_IGNORE='(ls*|cd*|pwd|exit|history*|cd -*|sudo reboot)'
+HISTORY_IGNORE='(ls*|cd*|z*|pwd|exit|history*|cd -*|sudo reboot)'
 HISTSIZE=10000
 SAVEHIST=8000
 
