@@ -1,147 +1,154 @@
-/* Transparent background */
-
-@import "colors.css";
-@define-color my-blue   #0f83f0;
-
+/* -----------------------------------------------------
+ * GLOBAL
+ * ---------------------------------------------------*/
 * {
-    color: @lavender;
     border: none;
     font-family: "JetBrainsMono Nerd Font Propo";
     font-size: 14px;
- 
     min-height: 0;
     margin: 0;
     padding: 0;
 }
 
+
+/* -----------------------------------------------------
+ * MODULE CONTAINERS
+ * ---------------------------------------------------*/
 .modules-left {
-    margin-left: 8px;
+    padding: 7px;
+    margin: 5px 0 5px 10px;
+    border-radius: 10px;
+
+    background: rgba(30, 30, 46, 0.6);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, .6);
+}
+
+.modules-center {
+    padding: 7px;
+    margin: 5px 0 5px 0;
+    border-radius: 10px;
+    background: rgba(30, 30, 46, 0.6);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, .6);
 }
 
 .modules-right {
-    margin-right: 8px;
+    padding: 7px;
+    margin: 5px 10px 5px 0;
+    border-radius: 10px;
+    background: rgba(30, 30, 46, 0.6);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, .6);
+}
+
+
+/* -----------------------------------------------------
+ * HOVER EFFECT
+ * ---------------------------------------------------*/
+#custom-notification:hover,
+#clock:hover,
+#custom-pacman:hover,
+#cpu:hover,
+#bluetooth:hover,
+#network:hover,
+#battery:hover {
+    transition: all .3s ease;
+    color: #0850c4;
 }
 
 /* -----------------------------------------------------
- * Window Title
+ * GENERAL MODULE STYLE 
+ * ---------------------------------------------------*/
+#custom-notification,
+#clock,
+#custom-pacman,
+#cpu,
+#bluetooth,
+#network,
+#battery {
+    padding: 0px 5px;
+    transition: all .3s ease;
+    color: #89b4fa;
+}
+
+
+/* -----------------------------------------------------
+ * WINDOW TITLE
  * ---------------------------------------------------*/
 #window {
-    color: @base;
-    background-color: @mauve;
-    margin: 5px 5px;
+    color: rgb(30, 30, 46);
+    background-color: rgb(203, 166, 247);
+    margin: 5px;
+    padding: 0 10px;
+    border-radius: 10px;
 }
 
 window#waybar {
-    background: transparent;
+    all: unset;
 }
 
 window#waybar.empty #window {
     background-color: transparent;
 }
 
-#workspaces,
-#custom-launcher,
-#custom-swap,
-#clock,
-#cpu,
-#network,
-#battery,
-#custom-power {
-    background: @mantle;
-    border: 1px solid @my-blue;
-    border-radius: 10px;
-    margin: 6px;
-    padding: 0 10px;
-}
+
+/* -----------------------------------------------------
+ * WORKSPACES
+ * ---------------------------------------------------*/
 #workspaces {
     padding: 0px 5px;
 }
+
+/* -----------------------------------------------------
+ * WORKSPACES BUTTONS
+ * ---------------------------------------------------*/
 #workspaces button {
-    all:unset;
+    all: unset;
     padding: 0px 5px;
-    color: alpha(@mauve,.4);
+    color: rgba(137, 180, 250, .4);
     transition: all .2s ease;
 }
+
 #workspaces button:hover {
-    color:rgba(0,0,0,0);
-    border: none;
+    color: transparent;
     text-shadow: 0px 0px 1.5px rgba(0, 0, 0, .5);
-    transition: all 1s ease;
 }
-#workspaces button.focused {
-    color: @mauve;
-    border: none;
+
+#workspaces button.active {
+    color: #89b4fa;
     text-shadow: 0px 0px 2px rgba(0, 0, 0, .5);
 }
+
 #workspaces button.empty {
-    color: rgba(0,0,0,0);
-    border: none;
+    color: transparent;
     text-shadow: 0px 0px 1.5px rgba(0, 0, 0, .2);
 }
-#workspaces button.empty:hover {
-    color: rgba(0,0,0,0);
-    border: none;
-    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, .5);
-    transition: all 1s ease;
-}
-#workspaces button.empty.focused {
-    color: @mauve;
-    border: none;
-    text-shadow: 0px 0px 2px rgba(0, 0, 0, .5);
-}
-/* #workspaces * { */
-/*     transition: all 250ms ease-in-out; */
-/*     color: whitesmoke; */
-/* } */
-/**/
-/* #workspaces button { */
-/*     color: @base; */
-/*     background: transparent; */
-/*     border: none; */
-/*     border-radius: 10px; */
-/*     padding: 0 6px; */
-/*     margin: 0 4px; */
-/*     min-width: 10px; */
-/*     font-size: 10px; */
-/* } */
-/**/
-/* #workspaces button lable { */
-/*     font-size: 10px; */
-/* } */
-/**/
-/* #worspaces button.focused { */
-/*     color: #89b4fa; */
-/* } */
-/**/
-/* #workspaces button.focused lable { */
-/*     font-size: 12px; */
-/* } */
-/**/
-/* #workspaces button.urgent { */
-/*     color: #f38ba8; */
-/* } */
-/**/
-/* #workspaces button:hover { */
-/*     color: @mauve; */
-/*     box-shadow: none; */
-/*     text-shadow: none; */
-/*     background: none; */
-/* } */
-/**/
-/* #workspaces button:hover * { */
-/*     color: @mauve; */
-/*     background-color: @base; */
-/* } */
 
-#clock,
-#custom-swap,
-#cpu,
-#network,
-#battery {
-    color: @sky;
+#workspaces button.empty.active {
+    color: #89b4fa;
 }
 
-#custom-power {
-    color: @red;
-    border: 1px solid @red;
+
+/* -----------------------------------------------------
+ * MISC
+ * ---------------------------------------------------*/
+#battery.charging {
+    color: #26A65B;
+}
+
+#battery.warning:not(.charging) {
+    color: #ffbe61;
+}
+
+#battery.critical:not(.charging) {
+    color: #f53c3c;
+    animation: blink 0.5s linear infinite alternate;
+}
+
+
+/* -----------------------------------------------------
+ * BLINK ANIMATION 
+ * ---------------------------------------------------*/
+@keyframes blink {
+    to {
+        opacity: 0.3;
+    }
 }
