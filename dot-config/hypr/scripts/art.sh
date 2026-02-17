@@ -1,19 +1,34 @@
 #!/usr/bin/env bash
 
-url=$(playerctl metadata mpris:artUrl)
-artist=$(playerctl metadata xesam:artist)
-album=$(playerctl metadata xesam:album)
-metadata=$(printf "$artist - $album")
+url=$(playerctl metadata mpris:artUrl 2>/dev/null)
+artist=$(playerctl metadata xesam:artist 2>/dev/null)
+album=$(playerctl metadata xesam:album 2>/dev/null)
 
-if [ $url == "No player found" ]
-then
-  exit
-elif [ -f /home/theblack/.cache/albumart/"$metadata".png ]
-then
-  echo /home/theblack/.cache/albumart/"$metadata".png
+metadata="${artist} - ${album}"
+
+if [ -z "$url" ] || [ "$url" == "No player found" ]; then
+    exit
+fi
+
+# Sanitize filename (remove problematic chars)
+safe_metadata=$(echo "$metadata" | tr -cd '[:alnum:]._-' | tr ' ' '_')
+
+# Ensure cache directory exists
+mkdir -p "/home/theblack/.cache/albumart"
+temp_path="/home/theblack/.cache/albumart/${safe_metadata}.tmp"
+cache_path="/home/theblack/.cache/albumart/${safe_metadata}.png"
+
+# Use cached file if exists
+if [ -f "$cache_path" ]; then
+    echo "$cache_path"
 else
-  curl -s $url -o /home/theblack/.cache/albumart/"$metadata"
-  magick /home/theblack/.cache/albumart/"$metadata" /home/theblack/.cache/albumart/"$metadata".png
-  rm /home/theblack/.cache/albumart/"$metadata"
-  echo /home/theblack/.cache/albumart/"$metadata".png
+    curl -s "$url" -o "$temp_path"
+ 
+    # Convert to PNG
+    magick "$temp_path" -resize 256x256\! "$cache_path"
+ 
+    # Remove temporary file
+    rm -f "$temp_path"
+
+    echo "$cache_path"
 fi
