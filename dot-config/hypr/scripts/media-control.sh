@@ -1,25 +1,45 @@
 #!/usr/bin/env bash
-# /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
-# Playerctl
+
+# ------------------------------------------------------------------------------
+#                                   PLAYERCTL
+# ------------------------------------------------------------------------------
 
 music_icon="$HOME/.config/swaync/icons/music.png"
+
+
+wait_for_new_track_and_notify() {
+    sleep 0.01
+    local status title artist
+    while read -r status; do
+        [[ "$status" == "Stopped" ]] && continue
+
+        title=$(playerctl metadata title 2>/dev/null)
+        artist=$(playerctl metadata artist 2>/dev/null)
+        notify-send -e -u low -i "$music_icon" "Now Playing:" "$title\nby $artist"
+        break
+    done < <(playerctl --follow status)
+}
 
 # Play the next track
 play_next() {
     playerctl next
-    show_music_notification
+    wait_for_new_track_and_notify
 }
 
 # Play the previous track
 play_previous() {
     playerctl previous
-    show_music_notification
+    wait_for_new_track_and_notify
 }
 
 # Toggle play/pause
 toggle_play_pause() {
     playerctl play-pause
-    show_music_notification
+    sleep 0.01
+    status="$(playerctl status)"
+    if [[ "$status" == "Paused" ]]; then
+        notify-send -e -u low -i "$music_icon" "Playback Paused"
+    fi
 }
 
 # Stop playback
@@ -28,17 +48,6 @@ stop_playback() {
     notify-send -e -u low -i "$music_icon" "Playback Stopped"
 }
 
-# Display notification with song information
-show_music_notification() {
-    status=$(playerctl status)
-    if [[ "$status" == "Playing" ]]; then
-        song_title=$(playerctl metadata title)
-        song_artist=$(playerctl metadata artist)
-        notify-send -e -u low -i "$music_icon" "Now Playing:" "$song_title\nby $song_artist"
-    elif [[ "$status" == "Paused" ]]; then
-        notify-send -e -u low -i "$music_icon" "Playback Paused"
-    fi
-}
 
 # Get media control action from command line argument
 case "$1" in
