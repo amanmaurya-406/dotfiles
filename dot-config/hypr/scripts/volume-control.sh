@@ -1,118 +1,105 @@
 #!/usr/bin/env bash
-# /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
+
+# __     __    _                         ___             _             _
+# \ \   / /__ | |_   _ _ __ ___   ___   / __| ___  _ __ | |_ _ __ ___ | |
+#  \ \ / / _ \| | | | | '_ ` _ \ / _ \ | |   / _ \| '_ \| __| '__/ _ \| |
+#   \ V / (_) | | |_| | | | | | |  __/ | |__| (_) | | | | |_| | | (_) | |
+#    \_/ \___/|_|\__,_|_| |_| |_|\___|  \____\___/|_| |_|\__|_|  \___/|_|
+#
 # Volume & Mic control script using wpctl (PipeWire)
 
 iconsDir="$HOME/.config/swaync/icons"
-sDIR="."
 
 # --- Get current volume ---
 get_volume() {
-    volume=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{printf "%d", $1*100}')
-    muted=$(wpctl get-mute @DEFAULT_AUDIO_SINK@)
+    volume_info=$(wpctl get-volume "$1")  # e.g., "Volume: 0.78 [MUTED]"
 
-    if [[ "$muted" == "true" || "$volume" -eq 0 ]]; then
+    # Extract numeric volume and convert to percentage
+    volume=$(awk '{printf "%.0f", $2*100}' <<< "$volume_info")
+
+    # Check if muted
+    status=$(awk '{print $3}' <<< "$volume_info")  # [MUTED] or ''
+
+    if [[ $volume -eq 0 || "$status" == "[MUTED]" ]]; then
         echo "Muted"
     else
-        echo "$volume%"
+        echo "$volume"
     fi
 }
 
-# --- Get volume icon ---
+# --- Get icon ---
 get_icon() {
-    current=$(get_volume)
-    if [[ "$current" == "Muted" ]]; then
-        echo "$iconsDir/volume-mute.png"
-    elif [[ "${current%\%}" -le 30 ]]; then
-        echo "$iconsDir/volume-low.png"
-    elif [[ "${current%\%}" -le 60 ]]; then
-        echo "$iconsDir/volume-mid.png"
-    else
-        echo "$iconsDir/volume-high.png"
+    current=$(get_volume "$1")
+    if [[ "$1" == "@DEFAULT_AUDIO_SINK@" ]]; then
+        if [[ "$current" == "Muted" ]]; then
+            echo "$iconsDir/volume-mute.png"
+        elif [[ "$current" -le 30 ]]; then
+            echo "$iconsDir/volume-low.png"
+        elif [[ "$current" -le 60 ]]; then
+            echo "$iconsDir/volume-mid.png"
+        else
+            echo "$iconsDir/volume-high.png"
+        fi
+    elif [[ "$1" == "@DEFAULT_AUDIO_SOURCE@" ]]; then
+        if [[ "$current" == "Muted" ]]; then
+            echo "$iconsDir/microphone-mute.png"
+        else
+            echo "$iconsDir/microphone.png"
+        fi
     fi
 }
 
 # --- Notify user about volume ---
-notify_user() {
-    current=$(get_volume)
-    icon=$(get_icon)
-    
-    if [[ "$current" == "Muted" ]]; then
-        notify-send -e -h string:x-canonical-private-synchronous:volume_notif -u low -i "$icon" "Volume: Muted"
+notify() {
+    icon=$(get_icon "$1")
+
+    if [[ "$1" == "@DEFAULT_AUDIO_SINK@" ]]; then
+        volume_mic="Volume"
     else
-        notify-send -e -h int:value:"${current%\%}" -h string:x-canonical-private-synchronous:volume_notif -u low -i "$icon" "Volume: $current"
-        "$sDIR/Sounds.sh" --volume
+        volume_mic="Mic"
     fi
+
+    current=$(get_volume "$1") # Muted or 78
+
+    if [[ "$current" != "Muted" ]]; then
+        current+="%" # 78%
+    fi
+
+    notify-send \
+        -h string:x-canonical-private-synchronous:volume_notif \
+        -u low \
+        -i "$icon" \
+        "$volume_mic: $current"
 }
 
 # --- Volume control ---
 inc_volume() {
-    wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
-    wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
-    notify_user
+    wpctl set-mute "$1" 0
+    wpctl set-volume "$1" 5%+
+    notify $1
 }
 
 dec_volume() {
-    wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
-    wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
-    notify_user
+    wpctl set-mute "$1" 0
+    wpctl set-volume "$1" 5%-
+    notify $1
 }
 
 toggle_mute() {
-    wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-    notify_user
+    wpctl set-mute "$1" toggle
+    notify $1
 }
 
-# --- Microphone control ---
-get_mic_volume() {
-    volume=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{printf "%d", $1*100}')
-    if [[ "$volume" -eq 0 || $(wpctl get-mute @DEFAULT_AUDIO_SOURCE@) == "true" ]]; then
-        echo "Muted"
-    else
-        echo "$volume%"
-    fi
-}
-
-get_mic_icon() {
-    if [[ $(wpctl get-mute @DEFAULT_AUDIO_SOURCE@) == "true" || $(get_mic_volume) == "Muted" ]]; then
-        echo "$iconsDir/microphone-mute.png"
-    else
-        echo "$iconsDir/microphone.png"
-    fi
-}
-
-notify_mic_user() {
-    volume=$(get_mic_volume)
-    icon=$(get_mic_icon)
-    notify-send -e -h int:value:"${volume%\%}" -h string:x-canonical-private-synchronous:volume_notif -u low -i "$icon" "Mic-Level: $volume"
-}
-
-toggle_mic() {
-    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-    notify_mic_user
-}
-
-inc_mic_volume() {
-    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 0
-    wpctl set-volume @DEFAULT_AUDIO_SOURCE@ +0.05
-    notify_mic_user
-}
-
-dec_mic_volume() {
-    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 0
-    wpctl set-volume @DEFAULT_AUDIO_SOURCE@ -0.05
-    notify_mic_user
-}
 
 # --- Main ---
 case "$1" in
-    --get) get_volume ;;
-    --inc) inc_volume ;;
-    --dec) dec_volume ;;
-    --toggle) toggle_mute ;;
-    --toggle-mic) toggle_mic ;;
-    --get-icon) get_icon ;;
-    --get-mic-icon) get_mic_icon ;;
-    --mic-inc) inc_mic_volume ;;
-    --mic-dec) dec_mic_volume ;;
-    *) get_volume ;;
+    --inc) inc_volume @DEFAULT_AUDIO_SINK@ ;;
+    --dec) dec_volume @DEFAULT_AUDIO_SINK@ ;;
+    --toggle) toggle_mute @DEFAULT_AUDIO_SINK@ ;;
+
+    --inc-mic) inc_volume @DEFAULT_AUDIO_SOURCE@ ;;
+    --dec-mic) dec_volume @DEFAULT_AUDIO_SOURCE@ ;;
+    --toggle-mic) toggle_mute @DEFAULT_AUDIO_SOURCE@ ;;
+
+    *) get_volume @DEFAULT_AUDIO_SINK@ ;;
 esac
