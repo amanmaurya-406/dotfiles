@@ -75,7 +75,7 @@ notify() {
 # --- Volume control ---
 inc_volume() {
     wpctl set-mute "$1" 0
-    wpctl set-volume "$1" 5%+
+    wpctl set-volume "$1" 5%+ --limit 1.5
     notify $1
 }
 

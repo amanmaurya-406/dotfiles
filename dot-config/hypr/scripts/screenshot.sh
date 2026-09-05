@@ -68,8 +68,8 @@ shot10() {
 }
 
 shotwin() {
-	w_pos=$(hyprctl activewindow | grep 'at:' | cut -d':' -f2 | tr -d ' ' | tail -n1)
-	w_size=$(hyprctl activewindow | grep 'size:' | cut -d':' -f2 | tr -d ' ' | tail -n1 | sed s/,/x/g)
+	w_pos=$(hyprctl activewindow | grep "at: [[:digit:]]" | cut -d' ' -f2)
+	w_size=$(hyprctl activewindow | grep "size: [[:digit:]]" | cut -d' ' -f2 | sed 's/,/x/')
 	cd ${dir} && grim -g "$w_pos $w_size" - | tee "$file" | wl-copy
 	notify_view
 }

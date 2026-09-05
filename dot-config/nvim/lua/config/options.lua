@@ -44,7 +44,7 @@ vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 1500
 
 vim.opt.list = true
 vim.opt.listchars = {
@@ -68,3 +68,11 @@ vim.opt.confirm = true
 vim.opt.foldmethod = 'indent' -- fold based on indentation
 vim.opt.foldenable = true -- enable folding by default
 vim.opt.foldlevel = 99 -- keep everything open unless folded manually
+
+-- Adds a trailing newline to every file on save — it's true by default
+-- vim.opt.fixendofline = false
+
+-- hide the command-line bar entirely when not in use
+vim.opt.cmdheight = 0
+
+vim.opt.termguicolors = true

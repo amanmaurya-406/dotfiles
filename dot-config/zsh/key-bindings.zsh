@@ -1,3 +1,7 @@
+#######################################################
+# ZSH Keybindings
+#######################################################
+
 copy-to-system-clipboard() { print -rn -- "$BUFFER" | wl-copy }
 paste-from-system-clipboard() { LBUFFER+=$(wl-paste) }
 change-cmd() {
@@ -10,18 +14,14 @@ zle -N paste-from-system-clipboard
 zle -N change-cmd
 
 
-#######################################################
-# ZSH Keybindings
-#######################################################
-
 # bindkey -v                                        # vim-style key bindings
 bindkey -e                                        # emacs key bindings
 bindkey ' ' magic-space                           # do history expansion on space
 bindkey '^Y' copy-to-system-clipboard             # ctrl + Y
 bindkey '^P' paste-from-system-clipboard          # ctrl + P
 bindkey '^X' change-cmd                           # ctrl + X
-bindkey '^D' backward-kill-line                   # ctrl + S
-bindkey '^F' kill-line                            # ctrl + D
+bindkey '^D' backward-kill-line                   # ctrl + D
+bindkey '^F' kill-line                            # ctrl + F
 bindkey '^B' backward-word                        # ctrl + B
 bindkey '^W' forward-word                         # ctrl + W
 bindkey '^[[1;5D' backward-word                   # ctrl + <-

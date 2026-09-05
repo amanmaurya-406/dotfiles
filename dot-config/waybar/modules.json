@@ -23,29 +23,26 @@
 
     "custom/pacman": {
         "format": "󰅢 {}",
-        "interval": 30,
-        "exec": "checkupdates | wc -l",
+        "interval": 600,
+        "exec": "bash -c 'checkupdates 2>/dev/null | wc -l || echo 0'",
         "exec-if": "exit 0",
         "on-click": "kitty sh -c 'yay -Syu; echo Done - Press enter to exit; read'; pkill -SIGRTMIN+8 waybar",
         "signal": 8,
         "tooltip": false
     },
 
-    "hyprland/workspaces": {
+    "ext/workspaces": {
         "format": "{icon}",
         "on-click": "activate",
         "format-icons": {
-            "urgent": "",
             "active": "",
             "default": ""
-        },
-        "persistent-workspaces": {
-           "*": [ 1,2,3,4,5 ]
         }
     },
 
     "cpu": {
         "format": " {usage: >2}% ",
+        "tooltip": false,
         "on-click": "kitty -e btop"
     },
 
@@ -53,9 +50,10 @@
         "format-on": "󰂯 ",
         "format-disabled": "󰂲 ",
         "format-connected": "󰂱 {num_connections}",
-        "tooltip-format": "󰂯 {device_alias}",
+        "tooltip-format": "󰂯 {status}",
+        "tooltip-format-on": "Bluetooth on — no devices connected",
         "tooltip-format-connected": "{device_enumerate}",
-        "tooltip-format-enumerate-connected": "󰂯 {device_alias} 󰂄{device_battery_percentage}%",
+        "tooltip-format-enumerate-connected": "󰂯 {device_alias} (󰂄{device_battery_percentage}%)",
         "tooltip": true,
         "on-click": "blueman-manager"
     },
@@ -79,8 +77,14 @@
         },
         "format": "{icon} {capacity: >3}%",
         "format-alt": "{icon}",
-        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-        "format-charging": "󰂄 {capacity}%",
-        "format-plugged": " {capacity}%"
+
+        "format-charging": "{icon} {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-full": "󰁹 100%",
+        "format-discharging": "{icon} {capacity}%",
+        "format-icons": {
+            "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+            "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+        }
     }
 }

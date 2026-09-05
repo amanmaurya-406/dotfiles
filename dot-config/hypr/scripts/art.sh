@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+#     _    _ _                          _         _
+#    / \  | | |__  _   _ _ __ ___      / \   _ __| |_
+#   / _ \ | | '_ \| | | | '_ ` _ \    / _ \ | '__| __|
+#  / ___ \| | |_) | |_| | | | | | |  / ___ \| |  | |_
+# /_/   \_\_|_.__/ \__,_|_| |_| |_| /_/   \_\_|   \__|
+#
+
 url=$(playerctl metadata mpris:artUrl 2>/dev/null)
 artist=$(playerctl metadata xesam:artist 2>/dev/null)
 album=$(playerctl metadata xesam:album 2>/dev/null)

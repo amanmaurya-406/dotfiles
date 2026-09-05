@@ -12,6 +12,6 @@ require 'config.keymaps'
 require 'config.autocmds'
 
 vim.api.nvim_set_hl(0, 'WinSeparator', {
-  fg = '#0f83f0',
+  fg = '#50BFE4',
   bg = 'NONE',
 })

@@ -21,6 +21,7 @@ fi
 
 # Alias for neovim
 if [[ -x "$(command -v nvim)" ]]; then
+    alias nv='nvim'
     alias vi='nvim'
     alias vim='nvim'
     alias svi='sudo nvim'
@@ -32,14 +33,24 @@ elif [[ -x "$(command -v vim)" ]]; then
 fi
 
 # Alias for lsd
-if [[ -x "$(command -v lsd)" ]]; then
-    alias ls='lsd -F --color=always --icon=always --group-directories-first'
-    alias l='lsd -l --color=always --icon=always --group-directories-first --blocks permission,user,group,size,name'
-    alias l.='lsd -lA --color=always --icon=always --group-directories-first | grep " \."'
-    alias ll='lsd -l --color=always --icon=always --group-directories-first'
-    alias la='lsd -A --color=always --icon=always --group-directories-first'
-    alias lla='lsd -lA --color=always --icon=always --group-directories-first --blocks permission,user,group,size,name'
-    alias tree='lsd --tree --color=always --icon=always --group-directories-first'
+# if [[ -x "$(command -v lsd)" ]]; then
+#     alias ls='lsd -F --color=always --icon=always --group-directories-first'
+#     alias l='lsd -l --color=always --icon=always --group-directories-first --blocks permission,user,group,size,name'
+#     alias l.='lsd -lA --color=always --icon=always --group-directories-first | grep " \."'
+#     alias ll='lsd -l --color=always --icon=always --group-directories-first'
+#     alias la='lsd -A --color=always --icon=always --group-directories-first'
+#     alias lla='lsd -lA --color=always --icon=always --group-directories-first --blocks permission,user,group,size,name'
+#     alias tree='lsd --tree --color=always --icon=always --group-directories-first'
+# fi
+
+# Alias for eza
+if [[ -x "$(command -v eza)" ]]; then
+    alias ls='eza --classify --color=always --icons=always --group-directories-first'
+    alias l.='eza -lhA --color=always --icons=always --group-directories-first | grep " \."'
+    alias ll='eza -lh --color=always --icons=always --group-directories-first'
+    alias la='eza -A --color=always --icons=always --group-directories-first'
+    alias lla='eza -lhA --color=always --icons=always --group-directories-first'
+    alias tree='eza --tree --color=always --icons=always --group-directories-first'
 fi
 
 # Alias for git
@@ -61,6 +72,13 @@ alias gnt='git tag -a'
 # Some other usefull aliases
 alias c='clear'
 alias x='exit'
-alias fd='fdfind'
+alias cat='bat'
 alias stow='command stow --dotfiles'
 alias gdb='gdb -q'
+alias diff='kitten diff'
+alias wifi='nmcli device wifi'
+
+# fd (fdfind on ubuntu)
+if command -v fdfind >/dev/null 2>&1; then
+    alias fd='fdfind'
+fi
